@@ -1,0 +1,10 @@
+import * as React from "react"
+import svg, { path, rect } from "react-native-svg"
+
+export default function Down() {
+  return (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6.45119 9.6585C5.88543 9.01192 6.34461 8 7.20377 8H16.7962C17.6554 8 18.1146 9.01192 17.5488 9.6585L12.7526 15.1399C12.3542 15.5952 11.6458 15.5952 11.2474 15.1399L6.45119 9.6585Z" fill="white"/>
+  </svg>
+  )
+}

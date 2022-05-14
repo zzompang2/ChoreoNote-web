@@ -1,0 +1,15 @@
+import * as React from "react"
+import svg, { rect } from "react-native-svg"
+import { COLORS } from "../../../values/styles"
+
+function Delete() {
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* <rect width="48" height="48" fill={COLORS.abnormal}/> */}
+      <rect x="4" y="4" width="40" height="40" rx="20" fill={COLORS.abnormal}/>
+      <rect x="13" y="22" width="22" height="4" rx="2" fill="white"/>
+    </svg>
+  )
+}
+
+export default Delete
