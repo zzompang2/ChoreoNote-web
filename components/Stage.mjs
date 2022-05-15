@@ -114,7 +114,6 @@ export default class Stage {
    * @param {bool} isBoxSelected 선택된 BOX 가 있는가
    */
   evalDraggable({ isBoxSelected, isMusicPlaying }) {
-    console.log(isBoxSelected, isMusicPlaying)
     if(isBoxSelected != undefined) {
       this.isBoxSelected = isBoxSelected;
     }
@@ -140,7 +139,6 @@ export default class Stage {
 
   stopAndSetPosition(ms) {
     this.#curPos = this.calcPositionAt(ms);
-    console.log("stopAndSetPostion:", this.#curPos);
     this.dancerObjArray.forEach(dancer => dancer.stop());
     this.dancerObjArray.forEach((dancer, did) => dancer.setPosition(this.#curPos[did]));
   }
@@ -257,7 +255,6 @@ export default class Stage {
 
   addDancer(id) {
     const dancer = this.dancerArray[id];
-    console.log(dancer, this.dancerArray, this.#curPos);
     const dancerObj = new Dancer({ id, name: dancer.name, position: this.#curPos[id], gap: this.gap });
     this.dancerObjArray.push(dancerObj);
     this.$stageDancer.appendChild(dancerObj.$dancer);

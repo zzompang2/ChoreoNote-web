@@ -5,6 +5,8 @@ export default class MusicPlayer {
     this.$playerSection = document.createElement("div");
     this.$playerSection.id = "player_section";
 
+    this.isMusicPlaying = false;
+
     // TRACK
     const $track = document.createElement("div");
     $track.id = "track";
@@ -92,7 +94,7 @@ export default class MusicPlayer {
 
     this.musicCanPlay = musicInfo.name == "" ? false : true;
     this.$audio = document.getElementById("audio");
-    this.$audio.src = musicInfo.name;
+    // this.$audio.src = musicInfo.name;
     //this.$audio.onloadedmetadata = () => console.log("노래길이:", this.$audio.duration);
     this._curTime = curTime;
     this.musicDuration = musicInfo.duration; // ms

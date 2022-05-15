@@ -30,30 +30,28 @@ const state = {
   copiedFormation: []
 }
 
-let musicFilePath;
+let musicFile;
 let isNoMusicNote;
 let noteLength;
 let noteName;
 
-/* init */
-document.getElementById("input_file").onchange = e => handleFile(e.target.files[0]);
+/* START_SECTION > START */
+// 새로 만들기 버튼
 document.getElementById("create_btn").onclick = () => {
-  musicFilePath = null;
-  document.getElementById("input_music").innerText = "노래 가져오기...";
-  noteName = "";
-  document.getElementById("input_file_name").value = "";
-  noteLength = 10;
-  document.getElementById("music_length_input").value = 10;
-  isNoMusicNote = false;
-  document.getElementById("music_checkbox").checked = false;
-  $startSection.lastElementChild.children[1].lastElementChild.style.display = "none";
   $startSection.firstElementChild.style.display = "none";
   $startSection.lastElementChild.style.display = "flex";
 }
-document.getElementById("cancel_btn").onclick = () => {
-  $startSection.firstElementChild.style.display = "flex";
-  $startSection.lastElementChild.style.display = "none";
+// 불러오기 버튼
+document.getElementById("input_file").onchange = e => handleFile(e.target.files[0]);
+document.getElementById("input_musicfile").onchange = e => handleMusicFile(e.target.files[0]);
+
+/* START_SECTION > CREATE */
+// 노트 제목 입력
+document.getElementById("input_file_name").onchange = e => {
+  noteName = e.target.value.replace(/^\s+|\s+$/gm, "");
+  e.target.value = noteName;
 }
+// 노래 가져오기
 document.getElementById("__input_music").onchange = e => {
   const file = e.target.files[0];
   if(file === undefined) return;
@@ -61,55 +59,52 @@ document.getElementById("__input_music").onchange = e => {
     new Toast("노래 파일이 아닙니다.", "warning");
     return;
   }
-  musicFilePath = e.target.value;
+  musicFile = file;
   document.getElementById("input_music").innerText = file.name;
   document.getElementById("input_music").classList.add("active");
-  console.log(e.target.value);
 };
+// 체크박스 선택
 document.getElementById("music_checkbox").onchange = e => {
   isNoMusicNote = e.target.checked;
   const $inputList = $startSection.lastElementChild.children[1];
   $inputList.lastElementChild.style.display = e.target.checked ? "flex" : "none";
 }
+// 노래 길이 입력
 document.getElementById("music_length_input").onchange = e => {
   noteLength = document.getElementById("music_length_input").value;
 }
-document.getElementById("input_file_name").onchange = e => {
-  noteName = e.target.value.replace(/^\s+|\s+$/gm, "");
-  e.target.value = noteName;
-}
-
+// 만들기 버튼
 document.getElementById("complete_btn").onclick = () => {
-  console.log("check1");
   if(noteName == "") {
     new Toast("노트 제목을 적어주세요.", "warning");
       return;
   }
+  // 노래 있는 노트
   if(!isNoMusicNote) {
-    if(musicFilePath == null) {
+    if(musicFile == null) {
       new Toast("노래 파일을 선택해주세요.", "warning");
       return;
     }
-    console.log("check2");
-    const $audio = document.createElement("audio");
-    $audio.src = musicFilePath;
-    console.log("check3");
+
+    // 노래 길이 구하기
+    const $audio = document.getElementById("audio");
+    const blobURL = window.URL.createObjectURL(musicFile);
+    $audio.src = blobURL;
     $audio.onloadedmetadata = () => {
-      console.log("check4");
       const duration = floorTime($audio.duration * 1000);
       if(duration < 10 || 1200 < noteLength) {
         new Toast("노래는 최소 10초, 최대 2분 길이여야 합니다.", "warning");
       }
       else {
         state.noteName = noteName;
-        state.musicInfo = { name: musicFilePath, duration };
+        state.musicInfo = { name: musicFile.name, duration };
         createNote();
       }
     };
   }
+  // 노래 없는 노트
   else if(isNoMusicNote) {
     noteLength = Number(noteLength);
-    console.log(noteLength);
     if(noteLength == NaN) return;
     if(noteLength < 10 || 1200 < noteLength) {
       new Toast("노래 길이는 10~1200초 사이로 설정해주세요.", "warning");
@@ -119,6 +114,10 @@ document.getElementById("complete_btn").onclick = () => {
     state.musicInfo = { name: "", duration: noteLength*1000 };
     createNote();
   }
+}
+// 취소 버튼
+document.getElementById("cancel_btn").onclick = () => {
+  window.location.reload();
 }
 
 function createNote() {
@@ -147,45 +146,94 @@ function createNote() {
  * 불러온 DATABASE 파일 검사 및 분석
  * @param {FILE} file 
  */
-function handleFile (file) {
+function handleFile(file) {
   if (file === undefined) {
     return;
   }
   const arr = file.name.split(".");
   if(arr[arr.length-1] != "choreo") {
     new Toast("choreo 파일이 아닙니다.", "warning");
+    window.location.reload();
     return;
   }
+  state.noteName = arr[0];
 
   const reader = new FileReader();
   reader.onload = event => {
     const result = JSON.parse(event.target.result);
     if(!checkDB(result)) {
-      new Toast("파일이 훼손되어 열 수 없습니다.", "warning");
+      new Toast("파일이 훼손되었습니다!", "warning");
+      window.location.reload();
       return;
     }
     [state.dancerArray, state.formationArray, state.musicInfo] = result;
-    init();
-    $startSection.style.display = "none";
+    window.alert(`다음으로 노래 파일을 선택해주세요!\n(노트에 등록된 노래: ${state.musicInfo.name})`);
+    document.getElementById("input_musicfile").click();
   }
   reader.readAsText(file);
+}
 
-  /**
-   * JSON 파일의 형식이 올바른지 확인
-   * @param {Array} result 
-   * @returns 
-   */
-  function checkDB(result) {
-    const [dancerArray, formationArray, musicInfo] = result;
-
-    // dancerArray, formationArray, musicInfo 3개가 있어야 함
-    if(result.length != 3) return false;
-    return true;
+function handleMusicFile(file) {
+  if (file === undefined) {
+    window.alert("노래 없이 파일을 불러옵니다.");
   }
+  else if(file.type != "audio/mpeg") {
+    window.alert("노래 파일이 아닙니다.");
+    window.location.reload();
+    return;
+  }
+  const $audio = document.getElementById("audio");
+  const blobURL = window.URL.createObjectURL(file);
+  $audio.src = blobURL;
+  $audio.onloadedmetadata = () => {
+    const duration = floorTime($audio.duration * 1000);
+    if(duration < 10 || 1200 < noteLength) {
+      window.alert("노래는 최소 10초, 최대 2분 길이여야 합니다.");
+      window.location.reload();
+      return;
+    }
+    else {
+      if(duration != state.musicInfo.duration) {
+        if(!window.confirm("노래 길이가 다릅니다. 계속 진행하시겠습니까?\n노래가 짧아진 경우, 기존 대열 일부가 삭제됩니다.")) {
+          window.location.reload();
+          return;
+        }
+        state.musicInfo.duration = duration;
+        // 노래 길이 넘어가는 박스 삭제하기
+        let id = 0;
+        for(; id < state.formationArray.length; id++) {
+          if(state.formationArray[id].time + state.formationArray[id].duration > duration)
+          break;
+        }
+        if(id == 0) {
+          state.formationArray = [{ ...state.formationArray[0], time: 0, duration: 2000}]
+        }
+        if(id != state.formationArray.length) {
+          state.formationArray = state.formationArray.splice(id);
+        }
+      }
+      init();
+      $startSection.style.display = "none";
+    }
+  };
+}
+
+/**
+ * JSON 파일의 형식이 올바른지 확인
+ * @param {Array} result 
+ * @returns 
+ */
+function checkDB(result) {
+  const [dancerArray, formationArray, musicInfo] = result;
+
+  // dancerArray, formationArray, musicInfo 3개가 있어야 함
+  if(result.length != 3) return false;
+
+  if(dancerArray == undefined || formationArray == undefined || musicInfo == undefined)
+  return true;
 }
 
 function init() {
-  console.log(TAG, "init");
   state.curTime = 0;
 
   stage = new Stage({
@@ -198,7 +246,7 @@ function init() {
     musicInfo: state.musicInfo,
     curTime: state.curTime,
     clickPlayBtn,
-    addFormationBox
+    addFormationBox,
   });
 
   timeline = new Timeline({
@@ -232,7 +280,6 @@ function init() {
   setCurTime(0);
 
   const $title = document.getElementById("main_header").firstElementChild;
-  console.log($title);
   $title.onclick = () => {
     if(window.confirm("초기 화면으로 돌아가시겠습니까?\n자동 저장 기능은 아직 없으니 꼭 저장해주세요!"))
     //$startSection.style.display = "flex";
@@ -244,7 +291,6 @@ function init() {
 
 function saveFile() {
   const jsonData = JSON.stringify([state.dancerArray, state.formationArray, state.musicInfo]);
-  console.log(jsonData);
 
   const a = document.createElement("a");
   const file = new Blob([jsonData], { type: "text/plain" });
@@ -309,9 +355,12 @@ function play() {
   timeline.play();
   musicPlayer.play();
 
+  const startDate = new Date().getTime();
+
   clearInterval(interval);
   interval = setInterval(() => {
-    const newCurTime = musicPlayer.audioCurTime;
+    // const newCurTime = musicPlayer.audioCurTime;
+    const newCurTime = startMusicTime + floorTime(new Date().getTime() - startDate);
 
     if(state.curTime == newCurTime) return;
 
@@ -537,7 +586,6 @@ function selectFormationBox(idx) {
 }
 
 function changeFormationTimeAndDuration({ id, time, duration }) {
-  console.log(id, time, duration);
   // RIGHT HANDLE
   if(time == undefined) {
     if(duration <= 0) return;
@@ -579,7 +627,6 @@ function changeFormationTimeAndDuration({ id, time, duration }) {
       return;
     }
     // CHANGE!
-    console.log("id:", id, "newId:", newId);
     state.formationArray[id].time = time;
     if(newId == id) {
       timeline.updateFormationBox(id);
@@ -588,7 +635,6 @@ function changeFormationTimeAndDuration({ id, time, duration }) {
     else {
       const target = state.formationArray.splice(id, 1)[0];
       state.formationArray.splice(newId, 0, target);
-      console.log("state.formationArray:", state.formationArray);
       timeline.moveFormationBox(id, newId);
     }
     update();
@@ -630,7 +676,6 @@ function addDancer() {
 }
 
 function deleteDancer(id) {
-  console.log(id);
   state.dancerArray.splice(id, 1);
   state.dancerArray.forEach(dancer => {
     if(dancer.id > id)
@@ -645,7 +690,6 @@ function deleteDancer(id) {
   });
   stage.removeDancer(id);
   sideScreen.removeDancer(id);
-  console.log(state.dancerArray, state.formationArray);
 }
 
 function changeDancerName(id, name) {

@@ -83,7 +83,6 @@ export default class SideScreen {
 
     const $rightToolbar = document.getElementById("right_toolbar");
     document.getElementById("dancer_btn").onclick = () => {
-      console.log("Dancer Btn");
       this.screenIsShown = !this.screenIsShown;
       this.$sideScreen.style.right = this.screenIsShown ? "0" : "-240px";
       $rightToolbar.style.width = this.screenIsShown ? "288px" : "48px";
@@ -131,7 +130,6 @@ export default class SideScreen {
   }
 
   removeDancer(id) {
-    console.log(id, this.$sideScreen.lastChild.children);
     this.$sideScreen.lastChild.removeChild(this.$sideScreen.lastChild.children[id]);
     [...this.$sideScreen.lastChild.children].forEach(($elem, id) => {
       $elem.firstChild.innerText = id+1;

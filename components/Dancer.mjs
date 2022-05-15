@@ -46,7 +46,6 @@ export default class Dancer {
         new Toast(this.reason, "warning");
         return false;
       }
-      console.log(TAG, "dragStart");
       // 드래그한 요소의 데이터 자료 형태 & 그 값을 설정해 저장
       initialPos.x = e.clientX;
       initialPos.y = e.clientY;
@@ -55,7 +54,6 @@ export default class Dancer {
     };
 
     const drag = e => {
-      console.log(TAG, "drag");
       if(this.isSnap) {
         const newX = roundPos(this.position.posx + e.clientX - initialPos.x, gap);
         const newY = roundPos(this.position.posy + e.clientY - initialPos.y, gap);
@@ -66,7 +64,6 @@ export default class Dancer {
     }
 
     const dragEnd = e => {
-      console.log(TAG, "dragEnd");
       // 실제 formationArray 배열의 값이 변경됨!
       let newX = this.position.posx + (e.clientX - initialPos.x);
       let newY = this.position.posy + (e.clientY - initialPos.y);

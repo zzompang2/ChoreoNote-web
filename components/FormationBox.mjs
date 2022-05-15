@@ -26,7 +26,6 @@ export default class FormationBox {
       e.dataTransfer.setDragImage(img, 0, 0);
     }
     $body.ondrag = e => {
-      console.log("drag");
       if(e.clientX == 0) return;  // 마지막 drag의 clientX가 0으로 가는 오류
       this.$box.style.transform = `translate(${e.clientX - initialX}px, 0)`;
     }

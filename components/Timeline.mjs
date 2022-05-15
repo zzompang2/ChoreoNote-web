@@ -174,7 +174,6 @@ export default class Timeline {
   }
 
   markBox(id) {
-    console.log("markBox:", id);
     // 이미 선택된 BOX인 경우
     if(this.markedBoxIdx == id) return;
 

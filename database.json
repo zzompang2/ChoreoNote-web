@@ -1,0 +1,128 @@
+[
+    [
+        {
+            "id": 0,
+            "name": "Ham",
+            "color": 0
+        },
+        {
+            "id": 1,
+            "name": "Kim",
+            "color": 0
+        },
+        {
+            "id": 2,
+            "name": "Zu",
+            "color": 0
+        },
+        {
+            "id": 3,
+            "name": "Geer",
+            "color": 0
+        },
+        {
+            "id": 4,
+            "name": "Boo",
+            "color": 0
+        }
+    ],
+    [
+        {
+            "time": 0,
+            "duration": 4000,
+            "positionsAtSameTime": [
+                {
+                    "did": 0,
+                    "posx": -50,
+                    "posy": -50
+                },
+                {
+                    "did": 1,
+                    "posx": 50,
+                    "posy": -50
+                },
+                {
+                    "did": 2,
+                    "posx": -100,
+                    "posy": 0
+                },
+                {
+                    "did": 3,
+                    "posx": 0,
+                    "posy": 0
+                },
+                {
+                    "did": 4,
+                    "posx": 100,
+                    "posy": 0
+                }
+            ]
+        },
+        {
+            "time": 5000,
+            "duration": 2000,
+            "positionsAtSameTime": [
+                {
+                    "did": 0,
+                    "posx": -100,
+                    "posy": -50
+                },
+                {
+                    "did": 1,
+                    "posx": 100,
+                    "posy": -50
+                },
+                {
+                    "did": 2,
+                    "posx": -100,
+                    "posy": 50
+                },
+                {
+                    "did": 3,
+                    "posx": 0,
+                    "posy": 50
+                },
+                {
+                    "did": 4,
+                    "posx": 100,
+                    "posy": 50
+                }
+            ]
+        },
+        {
+            "time": 9000,
+            "duration": 3000,
+            "positionsAtSameTime": [
+                {
+                    "did": 0,
+                    "posx": 100,
+                    "posy": 50
+                },
+                {
+                    "did": 1,
+                    "posx": -100,
+                    "posy": 50
+                },
+                {
+                    "did": 2,
+                    "posx": 100,
+                    "posy": -50
+                },
+                {
+                    "did": 3,
+                    "posx": 0,
+                    "posy": -50
+                },
+                {
+                    "did": 4,
+                    "posx": -100,
+                    "posy": -50
+                }
+            ]
+        }
+    ],
+    {
+        "name": "sample(27s).mp3",
+        "duration": 27000
+    }
+]
