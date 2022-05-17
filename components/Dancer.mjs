@@ -3,15 +3,14 @@ import Toast from "./Toast.mjs";
 const TAG = "Dancer.mjs/";
 
 export default class Dancer {
-  constructor({ id, name, position, gap }) {
-    this.id = id;
-    this.name = name;
+  constructor({ dancer, position, gap }) {
+    this.dancer = dancer;
     this.draggable = false;
     this.position = position;
     this.$dancer = document.createElement("div");
-    this.$dancer.id = id;
-    this.$dancer.setAttribute("class", "dancer");
-    this.$dancer.setAttribute("draggable", true);
+    this.$dancer.id = dancer.id;
+    this.$dancer.className = "dancer";
+    this.$dancer.draggable = true;
     this.$dancer.ondragstart = e => dragStart(e);
     this.$dancer.ondrag = e => drag(e);
     this.$dancer.ondragend = e => dragEnd(e);
@@ -23,8 +22,8 @@ export default class Dancer {
 
     // 윗면
     const $up = document.createElement("div");
-    $up.setAttribute("class", "up");
-    const $textNode = document.createTextNode(id+1);  // 표시할 숫자는 id+1
+    $up.className = `up color${dancer.color}`;
+    const $textNode = document.createTextNode(dancer.id+1);  // 표시할 숫자는 id+1
     $up.appendChild($textNode);
     this.$dancer.appendChild($up);
 
@@ -32,7 +31,7 @@ export default class Dancer {
     $sideGroup.className = "side_group";
     for(let i=0; i<24; i++) {
       const $side = document.createElement("div");
-      $side.setAttribute("class", "side");
+      $side.className = `side side_color${dancer.color}`;
       $side.style.transform = `translateY(-20px) rotateX(-90deg) rotateY(${15*i}deg) translateZ(14.5px)`;
       $sideGroup.appendChild($side);
     }
@@ -123,25 +122,37 @@ export default class Dancer {
 
   showName(nameIsShown) {
     if(nameIsShown) {
-      this.$dancer.firstChild.innerText = this.name.slice(0, 3);
+      this.$dancer.firstChild.innerText = this.dancer.name.slice(0, 3);
       this.$dancer.firstChild.classList.add("name");
     }
     else {
-      this.$dancer.firstChild.innerText = this.id+1;
+      this.$dancer.firstChild.innerText = this.dancer.id+1;
       this.$dancer.firstChild.classList.remove("name");
     }
   }
 
   changeName(name, nameIsShown) {
-    this.name = name;
+    //this.dancer.name = name;
     if(nameIsShown)
-    this.$dancer.firstChild.innerText = this.name.slice(0, 3);
+    this.$dancer.firstChild.innerText = this.dancer.name.slice(0, 3);
+  }
+
+  changeColor() {
+    const color = this.dancer.color;
+    const oldColor = color - 1 < 0 ? COLOR_NUM-1 : color - 1;
+
+    this.$dancer.firstChild.classList.remove(`color${oldColor}`);
+    this.$dancer.firstChild.classList.add(`color${color}`);
+    [...this.$dancer.lastChild.children].forEach($side => {
+      $side.classList.remove(`side_color${oldColor}`);
+      $side.classList.add(`side_color${color}`);
+    });
   }
 
   decreaseId(nameIsShown) {
-    this.id--;
-    this.$dancer.id = this.id;
+    // this.dancer.id--;
+    this.$dancer.id = this.dancer.id;
     if(!nameIsShown)
-    this.$dancer.firstChild.innerText = this.id+1;
+    this.$dancer.firstChild.innerText = this.dancer.id+1;
   }
 }

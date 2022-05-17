@@ -26,9 +26,13 @@
 	--color-yellowLight: #EF9C1C88;
 	--color-red: #D63F72;
 	--color-orange: #ff631b;
+	--color-orange-side: #c4460d;
   --color-purple: #8249d3;
+  --color-purple-side: #4d1f8f;
   --color-blue: #4469EB;
+  --color-blue-side: rgb(26, 60, 180);
   --color-green: #00817a;
+  --color-green-side: #004d49;
 }
 
 * {
@@ -119,6 +123,8 @@ body {
   flex-direction: column;
   align-items: flex-start;
   height: 200px;
+  margin: 0 20px;
+  box-sizing: border-box;
 }
 
 #start_section #create .elem {
@@ -145,12 +151,16 @@ body {
   color: var(--color-white);
 }
 
+#start_section #input_file_name {
+  width: 250px;
+}
+
 #start_section #create .input:focus {
   outline-width: 0;
 }
 
 #start_section #create #input_music {
-  width: 260px;
+  width: 250px;
   flex: 1;
   font-size: 14px;
   color: var(--color-grayDark);
@@ -315,16 +325,21 @@ body {
 }
 
 #side_screen .elem .did {
-  width: 10px;
-  padding-right: 6px;
-  font-size: 12px;
-  color: var(--color-grayMiddle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  font-size: 10px;
+  color: var(--color-blackMiddle);
 }
 
 #side_screen .elem .name_input {
   flex: 1;
   padding: 6px 8px;
   margin: 0 4px;
+  min-width: 50px;
   border: none;
   border-radius: 8px;
   font-size: 12px;
@@ -467,12 +482,45 @@ body {
   width: 100%;
   height: 100%;
   border-radius: 15px;
-  background-color: var(--color-orange);
   font-size: 16px;
   padding-bottom: 2px;
   user-select: none;
   transition-duration: 1s;
-  overflow: hidden;   /* 넘어가는 텍스트 줄바꿈 방지 */
+  overflow: hidden;     /* 넘어가는 텍스트 줄바꿈 방지 */
+  white-space: nowrap;  /* 넘어가는 텍스트 줄바꿈 방지 */
+  text-align: center;
+}
+
+.color0 {
+  background-color: var(--color-orange);
+}
+
+.color1 {
+  background-color: var(--color-purple);
+}
+
+.color2 {
+  background-color: var(--color-blue);
+}
+
+.color3 {
+  background-color: var(--color-green);
+}
+
+.dancer .side_color0 {
+  background-color: var(--color-orange-side);
+}
+
+.dancer .side_color1 {
+  background-color: var(--color-purple-side);
+}
+
+.dancer .side_color2 {
+  background-color: var(--color-blue-side);
+}
+
+.dancer .side_color3 {
+  background-color: var(--color-green-side);
 }
 
 .dancer .name {
@@ -495,8 +543,8 @@ body {
   position: absolute;
   width: 5px;
   height: 40px;
-  background-color: #D63F72;
   transform-origin: bottom;
+  transition-duration: 1s;
 }
 
 #divider {

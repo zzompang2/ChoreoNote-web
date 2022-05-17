@@ -66,7 +66,7 @@ export default class Stage {
     this.$stageDancer.setAttribute("id", "stage_dancer");
     this.$stageDancer.ondragover = e => e.preventDefault();
     this.dancerArray.forEach((dancer, idx) => {
-      const dancerObj = new Dancer({ id: dancer.id, name: dancer.name, position: this.#curPos[idx], gap });
+      const dancerObj = new Dancer({ dancer, position: this.#curPos[idx], gap });
       this.dancerObjArray.push(dancerObj);
       this.$stageDancer.appendChild(dancerObj.$dancer);
     });
@@ -253,9 +253,13 @@ export default class Stage {
     this.dancerObjArray[id].changeName(name, this.nameIsShown);
   }
 
+  changeColor(id) {
+    this.dancerObjArray[id].changeColor();
+  }
+
   addDancer(id) {
     const dancer = this.dancerArray[id];
-    const dancerObj = new Dancer({ id, name: dancer.name, position: this.#curPos[id], gap: this.gap });
+    const dancerObj = new Dancer({ dancer, position: this.#curPos[id], gap: this.gap });
     this.dancerObjArray.push(dancerObj);
     this.$stageDancer.appendChild(dancerObj.$dancer);
     this.evalDraggable({});

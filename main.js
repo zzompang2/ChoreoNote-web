@@ -32,7 +32,7 @@ const state = {
 
 let musicFile;
 let isNoMusicNote;
-let noteLength;
+let noteLength = 10;
 let noteName;
 
 /* START_SECTION > START */
@@ -153,7 +153,7 @@ function handleFile(file) {
   const arr = file.name.split(".");
   if(arr[arr.length-1] != "choreo") {
     new Toast("choreo 파일이 아닙니다.", "warning");
-    window.location.reload();
+    // window.location.reload();
     return;
   }
   state.noteName = arr[0];
@@ -163,25 +163,33 @@ function handleFile(file) {
     const result = JSON.parse(event.target.result);
     if(!checkDB(result)) {
       new Toast("파일이 훼손되었습니다!", "warning");
-      window.location.reload();
+      // window.location.reload();
       return;
     }
     [state.dancerArray, state.formationArray, state.musicInfo] = result;
-    window.alert(`다음으로 노래 파일을 선택해주세요!\n(노트에 등록된 노래: ${state.musicInfo.name})`);
-    document.getElementById("input_musicfile").click();
+    if(window.confirm(`다음으로 노래 파일을 선택해주세요! 노래 없이 불러오려면 취소를 눌러주세요.\n(노트에 등록된 노래: ${state.musicInfo.name == "" ? "없음" : state.musicInfo.name})`)) {
+      document.getElementById("input_musicfile").click();
+    }
+    else {
+      handleMusicFile();
+    }
   }
   reader.readAsText(file);
 }
 
 function handleMusicFile(file) {
   if (file === undefined) {
-    window.alert("노래 없이 파일을 불러옵니다.");
+    init();
+    $startSection.style.display = "none";
+    return;
   }
-  else if(file.type != "audio/mpeg") {
+
+  if(file.type != "audio/mpeg") {
     window.alert("노래 파일이 아닙니다.");
     window.location.reload();
     return;
   }
+
   const $audio = document.getElementById("audio");
   const blobURL = window.URL.createObjectURL(file);
   $audio.src = blobURL;
@@ -227,9 +235,16 @@ function checkDB(result) {
   const [dancerArray, formationArray, musicInfo] = result;
 
   // dancerArray, formationArray, musicInfo 3개가 있어야 함
-  if(result.length != 3) return false;
+  if(result.length != 3) {
+    console.log("Length is not 3.");
+    return false;
+  }
 
-  if(dancerArray == undefined || formationArray == undefined || musicInfo == undefined)
+  if(dancerArray == undefined || formationArray == undefined || musicInfo == undefined) {
+    console.log("Some array are undefined.");
+    return true;
+  }
+
   return true;
 }
 
@@ -698,7 +713,11 @@ function changeDancerName(id, name) {
 }
 
 function changeDancerColor(id) {
-
+  if(state.dancerArray[id].color == COLOR_NUM-1)
+  state.dancerArray[id].color = 0;
+  else
+  state.dancerArray[id].color++;
+  stage.changeColor(id);
 }
 
 /**

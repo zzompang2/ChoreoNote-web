@@ -4,6 +4,7 @@ const PIXEL_PER_SEC = 40;     // px / second
 const TIMELINE_PADDING = 60;
 const TIME_UNIT = 250;           // millisecond
 const HANDLE_WIDTH = 12;
+const COLOR_NUM = 4;
 
 /**
  * SECOND => "XX:XX"
